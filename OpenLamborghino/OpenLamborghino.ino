@@ -21,25 +21,25 @@ Esto es debido a que el Arduino Nano solo tiene 8 entradas analógicas, y se req
 #define PIN_Sensor_ON 11  // Pin para activar los sensores.
 
 // Canal A del TB6612, conectado al Motor Izquierdo
-#define PIN_AIN1 7  // Pin 1 de dirección del Motor Izquierdo.
-#define PIN_AIN2 4  // Pin 2 de dirección del Motor Izquierdo.
-#define PIN_PWMA 5  // Pin PWM del Motor Izquierdo.
+#define PIN_AIN1 4  // Pin 1 de dirección del Motor Izquierdo.
+#define PIN_AIN2 7  // Pin 2 de dirección del Motor Izquierdo.
+#define PIN_PWMA 6  // Pin PWM del Motor Izquierdo.
 
 // Canal B del TB6612, conectado al Motor Derecho
 #define PIN_BIN1 8  // Pin 1 de dirección del Motor Derecho.
 #define PIN_BIN2 9  // Pin 2 de dirección del Motor Derecho.
-#define PIN_PWMB 6  // Pin PWM del Motor Derecho.
+#define PIN_PWMB 5  // Pin PWM del Motor Derecho.
 
 #define kp 0.07  // Constante proporcional para el control PID.
 #define kd 0.8   // Constante derivativa para el control PID.
 
 // Define para habilitar o deshabilitar los mensajes de depuración
-// #define ENABLE_DEBUG
+//#define ENABLE_DEBUG
 
 // Define para habilitar la función de detección de hits
 #define ENABLE_HITS
 
-int base_speed = 70;  // Velocidad base del robot va desde 0 a 255 (0% - 100%)
+int base_speed = 50;  // Velocidad base del robot va desde 0 a 255 (0% - 100%)
 
 int turns_count = 0;
 
@@ -65,7 +65,7 @@ void setup() {
 #endif
 
   // Configura los pines como entradas o salidas
-  pinMode(PIN_BOTON, INPUT_PULLUP);
+  pinMode(PIN_BOTON, INPUT);
   pinMode(PIN_BUZZER, OUTPUT);
   pinMode(PIN_LED, OUTPUT);
   pinMode(PIN_Sensor_ON, OUTPUT);
@@ -128,7 +128,7 @@ void loop() {
     int Correction_power = PIDLambo(pos);  // Calcula la corrección necesaria usando el controlador PID.
 
     // Ajusta la velocidad de los motores en función de la corrección calculada.
-    Set_Motores(base_speed + Correction_power, base_speed + -Correction_power, false);
+    Set_Motores(base_speed - Correction_power, base_speed + Correction_power, false);
 
     GetGeo();  // Verifica la detección de pads o cruces.
 
@@ -142,7 +142,7 @@ void loop() {
     }
 #endif
 
-    if (!digitalRead(PIN_BOTON))  // Si se presiona el botón, el robot se detiene.
+    if (digitalRead(PIN_BOTON))  // Si se presiona el botón, el robot se detiene.
       state = false;
 
     // Enciende el LED si el robot está online y no detecta ningún pad.
@@ -195,11 +195,9 @@ void loop() {
  * Esta función mantiene el robot en un bucle hasta que el usuario presione el botón,
  * lo que es útil para pausar o iniciar el robot manualmente.
  */
-void WaitBoton() {  // Entra en un bucle infinito de espera.
-  while (digitalRead(PIN_BOTON))
-    ;  // Se sale del bucle cuando se presiona el botón.
-  while (!digitalRead(PIN_BOTON))
-    ;  // Espera hasta que se suelte el botón si está presionado.
+void WaitBoton() {                                // Entra en un bucle infinito de espera.
+  while (!digitalRead(PIN_BOTON)) { delay(10); }  // Se sale del bucle cuando se presiona el botón.
+  while (digitalRead(PIN_BOTON)) { delay(10); }   // Espera hasta que se suelte el botón si está presionado.
 }
 
 /**

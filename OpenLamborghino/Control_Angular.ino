@@ -42,7 +42,7 @@ Fase 1: Calibración estática
 
 Fase 2: Calibración en movimiento
 - En esta fase, se utiliza el valor de kp obtenido anteriormente y se define una velocidad base moderada.
-- Durante la calibración, se deben observar dos comportamientos principales del robot:
+- Durante la calibración, se deben observar tres comportamientos principales del robot:
   1. **Salida de curvas:** Con un kd bajo, el robot puede presentar oscilaciones amplias al salir de curvas cerradas.
   2. **Entrada de curvas:** Con un kd alto, puede producirse un sobreviraje en la entrada de curvas, lo que hace que la cola del robot se desplace hacia afuera como en un derrape.
   3. **Vibraciones en rectas:** Con un kd alto, en trayectorias rectas el robot podría generar vibraciones, un sonido de "claqueteo" y reducción de velocidad.
